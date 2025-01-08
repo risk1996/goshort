@@ -15,6 +15,7 @@ func main() {
 	r.PUT("/", handlers.PutLink)
 	r.GET("/:path", handlers.AccessLink)
 	r.PATCH("/:path/disable", handlers.DisableLink)
+	r.PATCH("/:path/enable", handlers.EnableLink)
 
 	r.Run(":8080")
 }
