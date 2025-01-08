@@ -25,3 +25,8 @@ func MapToResponse(m *models.Link) LinkResponse {
 type AdminRequest struct {
 	Secret string `json:"secret"`
 }
+
+type EditLinkRequest struct {
+	AdminRequest
+	PutLinkRequest
+}
