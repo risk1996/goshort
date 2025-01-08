@@ -13,6 +13,7 @@ func main() {
 	utils.AttachDB(r, db)
 
 	r.POST("/", handlers.CreateLink)
+	r.GET("/:path", handlers.AccessLink)
 
 	r.Run(":8080")
 }
