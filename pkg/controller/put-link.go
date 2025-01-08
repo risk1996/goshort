@@ -1,4 +1,4 @@
-package handlers
+package controller
 
 import (
 	"net/http"
@@ -11,10 +11,21 @@ import (
 	"github.com/risk1996/goshort/pkg/utils"
 )
 
-func PutLink(c *gin.Context) {
+// PutLink godoc
+//
+//	@Summary		Create a new link
+//	@Description	Creates a new shortened link for the provided URL.
+//	@Tags			link
+//	@Accept			json
+//	@Param			body	body	ShortenLinkRequest	true	"Target URL"
+//	@Produce		json
+//	@Success		200	{object}	LinkResponse	"Link created successfully."
+//	@Failure		400	"Invalid request."
+//	@Router			/ [put]
+func (*Controller) PutLink(c *gin.Context) {
 	db := utils.GetDB(c)
 
-	var req PutLinkRequest
+	var req ShortenLinkRequest
 	if c.BindJSON(&req) != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
 		return

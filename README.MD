@@ -11,20 +11,33 @@ A simple Go-based service to manage shortened links with support for create, acc
 
 ## Requirements
 - [Go](https://go.dev) v1.23.4 installed on your system.
+- [Swag](https://github.com/swaggo/swag) for generating Swagger documentation. Optionally, add the swag executables into your `PATH` variable.
 - [Hurl](https://hurl.dev/) for integration testing.
-
-## Default Configuration
-- **Port**: `8080`
-- **Base URL**: `http://localhost:8080`
 
 ## Usage
 
 ### Start the Service
-To run the service, use the following command:
+To run the service for debugging, use the following command:
 ```bash
-go run main.go
+swag init -o pkg/docs; go run ./main.go
 ```
 The service will start on port 8080 by default. You can access it via http://localhost:8080.
+
+#### Flags
+| Name   | Default | Description |
+| ------ | ------- | ----------- |
+| `port` | `8080`  | Server port |
+
+#### Local documentation
+Local documentation can be viewed when running the application and opening `http://localhost:8080/swagger/index.html`.
+
+### Deployment
+You need to build and run the application in release mode, use the following command:
+```bash
+swag init -o pkg/docs
+go build ./main.go
+GIN_MODE=release ./main
+```
 
 ### Integration Testing
 To test the service using the provided Hurl scripts:

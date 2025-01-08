@@ -1,4 +1,4 @@
-package handlers
+package controller
 
 import (
 	"database/sql"
@@ -10,7 +10,20 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-func EnableLink(c *gin.Context) {
+// EnableLink godoc
+//
+//	@Summary		Enable a link
+//	@Description	Enables the link with the given path and secret. Idempotent.
+//	@Tags			link
+//	@Param			path	path	string	true	"Shortened path"
+//	@Accept			json
+//	@Param			body	body	AdminRequest	true	"Secret"
+//	@Produce		json
+//	@Success		200	{object}	LinkResponse	"Link enabled successfully."
+//	@Failure		400	"Invalid request."
+//	@Failure		404 "Link not found or wrong secret."
+//	@Router			/{path}/enable [patch]
+func (*Controller) EnableLink(c *gin.Context) {
 	db := utils.GetDB(c)
 	path := c.Params.ByName("path")
 

@@ -1,4 +1,4 @@
-package handlers
+package controller
 
 import (
 	"net/http"
@@ -8,7 +8,20 @@ import (
 	"github.com/risk1996/goshort/pkg/utils"
 )
 
-func DisableLink(c *gin.Context) {
+// DisableLink godoc
+//
+//	@Summary		Disable a link
+//	@Description	Disables the link with the given path and secret. Idempotent.
+//	@Tags			link
+//	@Param			path	path	string	true	"Shortened path"
+//	@Accept			json
+//	@Param			body	body	AdminRequest	true	"Secret"
+//	@Produce		json
+//	@Success		200	{object}	LinkResponse	"Link disabled successfully."
+//	@Failure		400	"Invalid request."
+//	@Failure		404 "Link not found or wrong secret."
+//	@Router			/{path}/disable [patch]
+func (*Controller) DisableLink(c *gin.Context) {
 	db := utils.GetDB(c)
 	path := c.Params.ByName("path")
 

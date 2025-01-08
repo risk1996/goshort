@@ -1,4 +1,4 @@
-package handlers
+package controller
 
 import (
 	"net/http"
@@ -8,7 +8,16 @@ import (
 	"github.com/risk1996/goshort/pkg/utils"
 )
 
-func AccessLink(c *gin.Context) {
+// AccessLink godoc
+//
+//	@Summary		Access a link
+//	@Description	Redirects to the original URL for the given shortened path.
+//	@Tags			link
+//	@Param			path	path	string	true	"Shortened path"
+//	@Success		301		"Redirects to the target URL."
+//	@Failure		404		"Link not found or inactive."
+//	@Router			/{path} [get]
+func (*Controller) AccessLink(c *gin.Context) {
 	db := utils.GetDB(c)
 	path := c.Params.ByName("path")
 

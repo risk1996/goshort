@@ -1,0 +1,211 @@
+basePath: /
+definitions:
+  AdminRequest:
+    properties:
+      secret:
+        description: The secret key for managing the link.
+        example: bcc9a044-918a-4ffa-ae4b-75274ca23668
+        format: uuid
+        type: string
+    required:
+    - secret
+    type: object
+  EditLinkRequest:
+    properties:
+      secret:
+        description: The secret key for managing the link.
+        example: bcc9a044-918a-4ffa-ae4b-75274ca23668
+        format: uuid
+        type: string
+      url:
+        description: The target URL to shorten.
+        example: https://www.google.com
+        format: url
+        type: string
+    required:
+    - secret
+    - url
+    type: object
+  LinkResponse:
+    properties:
+      active:
+        description: Whether the link is active.
+        example: true
+        type: boolean
+      path:
+        description: The shortened path.
+        example: abc12345
+        type: string
+      secret:
+        description: The secret key for managing the link.
+        example: bcc9a044-918a-4ffa-ae4b-75274ca23668
+        format: uuid
+        type: string
+      target:
+        description: The target URL.
+        example: https://www.google.com
+        format: url
+        type: string
+    required:
+    - active
+    - path
+    - secret
+    - target
+    type: object
+  ShortenLinkRequest:
+    properties:
+      url:
+        description: The target URL to shorten.
+        example: https://www.google.com
+        format: url
+        type: string
+    required:
+    - url
+    type: object
+externalDocs:
+  description: GitHub
+  url: https://github.com/risk1996/goshort
+info:
+  contact:
+    email: williamdariansutedjo@gmail.com
+    name: William Darian
+  description: A simple Go-based service to manage shortened links with support for
+    create, access, edit, enable, and disable functionalities.
+  title: Goshort
+  version: "0.1"
+paths:
+  /:
+    put:
+      consumes:
+      - application/json
+      description: Creates a new shortened link for the provided URL.
+      parameters:
+      - description: Target URL
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/ShortenLinkRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Link created successfully.
+          schema:
+            $ref: '#/definitions/LinkResponse'
+        "400":
+          description: Invalid request.
+      summary: Create a new link
+      tags:
+      - link
+  /{path}:
+    get:
+      description: Redirects to the original URL for the given shortened path.
+      parameters:
+      - description: Shortened path
+        in: path
+        name: path
+        required: true
+        type: string
+      responses:
+        "301":
+          description: Redirects to the target URL.
+        "404":
+          description: Link not found or inactive.
+      summary: Access a link
+      tags:
+      - link
+  /{path}/disable:
+    patch:
+      consumes:
+      - application/json
+      description: Disables the link with the given path and secret. Idempotent.
+      parameters:
+      - description: Shortened path
+        in: path
+        name: path
+        required: true
+        type: string
+      - description: Secret
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/AdminRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Link disabled successfully.
+          schema:
+            $ref: '#/definitions/LinkResponse'
+        "400":
+          description: Invalid request.
+        "404":
+          description: Link not found or wrong secret.
+      summary: Disable a link
+      tags:
+      - link
+  /{path}/edit:
+    patch:
+      consumes:
+      - application/json
+      description: Edits the target URL for the given path and secret. Idempotent.
+      parameters:
+      - description: Shortened path
+        in: path
+        name: path
+        required: true
+        type: string
+      - description: Secret and new target URL
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/EditLinkRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Link edited successfully.
+          schema:
+            $ref: '#/definitions/LinkResponse'
+        "400":
+          description: Invalid request.
+        "404":
+          description: Link not found or wrong secret.
+      summary: Edit a link
+      tags:
+      - link
+  /{path}/enable:
+    patch:
+      consumes:
+      - application/json
+      description: Enables the link with the given path and secret. Idempotent.
+      parameters:
+      - description: Shortened path
+        in: path
+        name: path
+        required: true
+        type: string
+      - description: Secret
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/AdminRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Link enabled successfully.
+          schema:
+            $ref: '#/definitions/LinkResponse'
+        "400":
+          description: Invalid request.
+        "404":
+          description: Link not found or wrong secret.
+      summary: Enable a link
+      tags:
+      - link
+swagger: "2.0"

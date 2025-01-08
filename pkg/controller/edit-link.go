@@ -1,4 +1,4 @@
-package handlers
+package controller
 
 import (
 	"net/http"
@@ -10,7 +10,20 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-func EditLink(c *gin.Context) {
+// EditLink godoc
+//
+//	@Summary		Edit a link
+//	@Description	Edits the target URL for the given path and secret. Idempotent.
+//	@Tags			link
+//	@Param			path	path	string	true	"Shortened path"
+//	@Accept			json
+//	@Param			body	body	EditLinkRequest	true	"Secret and new target URL"
+//	@Produce		json
+//	@Success		200	{object}	LinkResponse	"Link edited successfully."
+//	@Failure		400	"Invalid request."
+//	@Failure		404 "Link not found or wrong secret."
+//	@Router			/{path}/edit [patch]
+func (*Controller) EditLink(c *gin.Context) {
 	db := utils.GetDB(c)
 	path := c.Params.ByName("path")
 
