@@ -9,8 +9,10 @@ HTTP 200
 jsonpath "$.id" > 0
 jsonpath "$.path" isString
 jsonpath "$.target" == "https://www.google.com"
+jsonpath "$.admin_secret" isString
 [Captures]
 path: jsonpath "$.path"
+secret: jsonpath "$.admin_secret"
 
 #? Access Link
 #* Req
