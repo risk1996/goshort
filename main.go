@@ -12,7 +12,7 @@ func main() {
 	r := gin.Default()
 	utils.AttachDB(r, db)
 
-	r.POST("/", handlers.CreateLink)
+	r.PUT("/", handlers.PutLink)
 	r.GET("/:path", handlers.AccessLink)
 
 	r.Run(":8080")

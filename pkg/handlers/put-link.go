@@ -14,7 +14,7 @@ type Request struct {
 	URL string `json:"url" binding:"required,http_url"`
 }
 
-func CreateLink(c *gin.Context) {
+func PutLink(c *gin.Context) {
 	db := utils.GetDB(c)
 
 	var req Request
@@ -28,7 +28,7 @@ func CreateLink(c *gin.Context) {
 		entry := models.Link{Path: core.RandShortLinkPath(8), Target: url}
 		db.FirstOrCreate(&entry, "target = ?", url)
 
-		c.JSON(http.StatusCreated, entry)
+		c.JSON(http.StatusOK, entry)
 	} else {
 		c.AbortWithStatus(http.StatusBadRequest)
 	}

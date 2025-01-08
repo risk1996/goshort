@@ -1,10 +1,10 @@
 #? Create Link
 #* Req
-POST {{base_url}}
+PUT {{base_url}}
 Content-Type: application/json
 { "url": "https://www.google.com/" }
 #* Res
-HTTP 201
+HTTP 200
 [Asserts]
 jsonpath "$.id" > 0
 jsonpath "$.path" isString
