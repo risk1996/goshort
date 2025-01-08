@@ -4,6 +4,7 @@
     "gonic",
     "gorm",
     "goshort",
+    "lefthook",
     "swaggo"
   ]
 }

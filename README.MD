@@ -13,13 +13,27 @@ A simple Go-based service to manage shortened links with support for create, acc
 - [Go](https://go.dev) v1.23.4 installed on your system.
 - [Swag](https://github.com/swaggo/swag) for generating Swagger documentation. Optionally, add the swag executables into your `PATH` variable.
 - [Hurl](https://hurl.dev/) for integration testing.
+- [Lefthook](https://github.com/evilmartians/lefthook) for Git hooks.
+- [Koji](https://github.com/cococonscious/koji) for Conventional Commits helper.
+
+## Documentation
+Open `https://editor.swagger.io` and select `File > Import URL` from the top menu and put this URL:
+```
+https://raw.githubusercontent.com/risk1996/goshort/refs/heads/main/pkg/docs/swagger.yaml
+```
+
+### Setup
+Run this to install Lefthook as configured:
+```
+lefthook install
+```
 
 ## Usage
 
 ### Start the Service
 To run the service for debugging, use the following command:
 ```bash
-swag init -o pkg/docs; go run ./main.go
+go run ./main.go
 ```
 The service will start on port 8080 by default. You can access it via http://localhost:8080.
 
@@ -28,13 +42,12 @@ The service will start on port 8080 by default. You can access it via http://loc
 | ------ | ------- | ----------- |
 | `port` | `8080`  | Server port |
 
-#### Local documentation
+#### Local Documentation
 Local documentation can be viewed when running the application and opening `http://localhost:8080/swagger/index.html`.
 
 ### Deployment
 You need to build and run the application in release mode, use the following command:
 ```bash
-swag init -o pkg/docs
 go build ./main.go
 GIN_MODE=release ./main
 ```

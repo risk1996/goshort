@@ -1,0 +1,10 @@
+commit-msg:
+  parallel: true
+  commands:
+    generate-docs:
+      run: |
+        $HOME/go/bin/swag fmt
+        $HOME/go/bin/swag init -o pkg/docs
+        git add .
+        echo "Docs updated."
+
