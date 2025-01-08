@@ -13,11 +13,9 @@ func AccessLink(c *gin.Context) {
 	path := c.Params.ByName("path")
 
 	var entry models.Link
-	db.First(&entry, "deleted_at IS NULL AND path = ?", path)
-
-	if entry.Target == "" {
+	res := db.Limit(1).Find(&entry, "deleted_at IS NULL AND path = ?", path)
+	if res.RowsAffected == 0 {
 		c.AbortWithStatus(http.StatusNotFound)
-		return
 	} else {
 		c.Redirect(http.StatusMovedPermanently, entry.Target)
 	}

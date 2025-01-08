@@ -13,5 +13,5 @@ type Link struct {
 	DeletedAt   gorm.DeletedAt `json:"-" gorm:"index"`
 	Path        string         `json:"path" gorm:"uniqueIndex"`
 	Target      string         `json:"target"`
-	AdminSecret string         `json:"admin_secret"`
+	AdminSecret string         `json:"admin_secret" gorm:"uniqueIndex"`
 }
