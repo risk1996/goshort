@@ -39,21 +39,21 @@ header "Location" == "{{target_url_normalized}}"
 #? Disable Link (Not Found)
 #* Req
 PATCH {{base_url}}/{{wrong_data}}/disable
-{ "secret": "{{secret}}" }
+Authorization: Bearer {{secret}}
 #* Res
 HTTP 404
 
 #? Disable Link (Wrong Secret)
 #* Req
 PATCH {{base_url}}/{{path}}/disable
-{ "secret": "{{wrong_data}}" }
+Authorization: Bearer {{wrong_data}}
 #* Res
-HTTP 404
+HTTP 401
 
 #? Disable Link (OK)
 #* Req
 PATCH {{base_url}}/{{path}}/disable
-{ "secret": "{{secret}}" }
+Authorization: Bearer {{secret}}
 #* Res
 HTTP 200
 [Asserts]
@@ -71,7 +71,7 @@ HTTP 404
 #? Disable Link (Idempotency Check)
 #* Req
 PATCH {{base_url}}/{{path}}/disable
-{ "secret": "{{secret}}" }
+Authorization: Bearer {{secret}}
 #* Res
 HTTP 200
 [Asserts]
@@ -89,21 +89,29 @@ HTTP 404
 #? Edit Link (Disabled)
 #* Req
 PATCH {{base_url}}/{{path}}/edit
-{ "secret": "{{secret}}", "url": "{{edit_url}}" }
+Authorization: Bearer {{secret}}
+{ "url": "{{edit_url}}" }
+#* Res
+HTTP 404
+
+#? Enable Link (Not Found)
+#* Req
+PATCH {{base_url}}/{{wrong_data}}/enable
+Authorization: Bearer {{secret}}
 #* Res
 HTTP 404
 
 #? Enable Link (Wrong Secret)
 #* Req
 PATCH {{base_url}}/{{path}}/enable
-{ "secret": "{{wrong_data}}" }
+Authorization: Bearer {{wrong_data}}
 #* Res
-HTTP 404
+HTTP 401
 
 #? Enable Link (OK)
 #* Req
 PATCH {{base_url}}/{{path}}/enable
-{ "secret": "{{secret}}" }
+Authorization: Bearer {{secret}}
 #* Res
 HTTP 200
 [Asserts]
@@ -123,7 +131,7 @@ header "Location" == "{{target_url_normalized}}"
 #? Enable Link (Idempotency Check)
 #* Req
 PATCH {{base_url}}/{{path}}/enable
-{ "secret": "{{secret}}" }
+Authorization: Bearer {{secret}}
 #* Res
 HTTP 200
 [Asserts]
@@ -143,21 +151,24 @@ header "Location" == "{{target_url_normalized}}"
 #? Edit Link (Wrong Secret)
 #* Req
 PATCH {{base_url}}/{{path}}/edit
-{ "secret": "{{wrong_data}}", "url": "{{edit_url}}" }
+Authorization: Bearer {{wrong_data}}
+{ "url": "{{edit_url}}" }
 #* Res
-HTTP 404
+HTTP 401
 
 #? Edit Link (Invalid Data)
 #* Req
 PATCH {{base_url}}/{{path}}/edit
-{ "secret": "{{secret}}", "url": "{{wrong_data}}" }
+Authorization: Bearer {{secret}}
+{ "url": "{{wrong_data}}" }
 #* Res
 HTTP 400
 
 #? Edit Link (OK)
 #* Req
 PATCH {{base_url}}/{{path}}/edit
-{ "secret": "{{secret}}", "url": "{{edit_url}}" }
+Authorization: Bearer {{secret}}
+{ "url": "{{edit_url}}" }
 #* Res
 HTTP 200
 [Asserts]

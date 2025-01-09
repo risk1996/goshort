@@ -15,21 +15,20 @@ import (
 //	@Summary		Enable a link
 //	@Description	Enables the link with the given path and secret. Idempotent.
 //	@Tags			link
-//	@Param			path	path	string	true	"Shortened path"
-//	@Accept			json
-//	@Param			body	body	AdminRequest	true	"Secret"
+//	@Param			path			path	string	true	"Shortened path"
+//	@Param			Authorization	header	string	true	"Bearer token containing admin secret"
 //	@Produce		json
 //	@Success		200	{object}	LinkResponse	"Link enabled successfully."
-//	@Failure		400	"Invalid request."
-//	@Failure		404 "Link not found or wrong secret."
+//	@Failure		401	"Invalid admin secret."
+//	@Failure		404	"Link not found."
 //	@Router			/{path}/enable [patch]
 func (*Controller) EnableLink(c *gin.Context) {
 	db := utils.GetDB(c)
 	path := c.Params.ByName("path")
+	secret, err := utils.ParseAuthBearerToken(c)
 
-	var req AdminRequest
-	if c.Bind(&req) != nil {
-		c.AbortWithStatus(http.StatusBadRequest)
+	if err != nil {
+		c.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
 
@@ -37,10 +36,13 @@ func (*Controller) EnableLink(c *gin.Context) {
 	res := db.
 		Limit(1).
 		Unscoped().
-		Where("path = ? AND admin_secret = ?", path, req.Secret).
+		Where("path = ?", path).
 		Find(&entry)
 	if res.RowsAffected == 0 {
 		c.AbortWithStatus(http.StatusNotFound)
+		return
+	} else if entry.AdminSecret != secret {
+		c.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
 
@@ -48,7 +50,7 @@ func (*Controller) EnableLink(c *gin.Context) {
 		Clauses(clause.Returning{}).
 		Model(&entry).
 		Unscoped().
-		Where("path = ? AND admin_secret = ?", path, req.Secret).
+		Where("path = ? AND admin_secret = ?", path, secret).
 		Update("deleted_at", sql.NullTime{Valid: false})
 	c.JSON(http.StatusOK, MapToResponse(&entry))
 }

@@ -1,31 +1,5 @@
 basePath: /
 definitions:
-  AdminRequest:
-    properties:
-      secret:
-        description: The secret key for managing the link.
-        example: bcc9a044-918a-4ffa-ae4b-75274ca23668
-        format: uuid
-        type: string
-    required:
-    - secret
-    type: object
-  EditLinkRequest:
-    properties:
-      secret:
-        description: The secret key for managing the link.
-        example: bcc9a044-918a-4ffa-ae4b-75274ca23668
-        format: uuid
-        type: string
-      url:
-        description: The target URL to shorten.
-        example: https://www.google.com
-        format: url
-        type: string
-    required:
-    - secret
-    - url
-    type: object
   LinkResponse:
     properties:
       active:
@@ -117,8 +91,6 @@ paths:
       - link
   /{path}/disable:
     patch:
-      consumes:
-      - application/json
       description: Disables the link with the given path and secret. Idempotent.
       parameters:
       - description: Shortened path
@@ -126,12 +98,11 @@ paths:
         name: path
         required: true
         type: string
-      - description: Secret
-        in: body
-        name: body
+      - description: Bearer token containing admin secret
+        in: header
+        name: Authorization
         required: true
-        schema:
-          $ref: '#/definitions/AdminRequest'
+        type: string
       produces:
       - application/json
       responses:
@@ -139,10 +110,10 @@ paths:
           description: Link disabled successfully.
           schema:
             $ref: '#/definitions/LinkResponse'
-        "400":
-          description: Invalid request.
+        "401":
+          description: Invalid admin secret.
         "404":
-          description: Link not found or wrong secret.
+          description: Link not found.
       summary: Disable a link
       tags:
       - link
@@ -157,12 +128,17 @@ paths:
         name: path
         required: true
         type: string
-      - description: Secret and new target URL
+      - description: Bearer token containing admin secret
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Target URL
         in: body
         name: body
         required: true
         schema:
-          $ref: '#/definitions/EditLinkRequest'
+          $ref: '#/definitions/ShortenLinkRequest'
       produces:
       - application/json
       responses:
@@ -172,15 +148,15 @@ paths:
             $ref: '#/definitions/LinkResponse'
         "400":
           description: Invalid request.
+        "401":
+          description: Invalid admin secret.
         "404":
-          description: Link not found or wrong secret.
+          description: Link not found.
       summary: Edit a link
       tags:
       - link
   /{path}/enable:
     patch:
-      consumes:
-      - application/json
       description: Enables the link with the given path and secret. Idempotent.
       parameters:
       - description: Shortened path
@@ -188,12 +164,11 @@ paths:
         name: path
         required: true
         type: string
-      - description: Secret
-        in: body
-        name: body
+      - description: Bearer token containing admin secret
+        in: header
+        name: Authorization
         required: true
-        schema:
-          $ref: '#/definitions/AdminRequest'
+        type: string
       produces:
       - application/json
       responses:
@@ -201,10 +176,10 @@ paths:
           description: Link enabled successfully.
           schema:
             $ref: '#/definitions/LinkResponse'
-        "400":
-          description: Invalid request.
+        "401":
+          description: Invalid admin secret.
         "404":
-          description: Link not found or wrong secret.
+          description: Link not found.
       summary: Enable a link
       tags:
       - link

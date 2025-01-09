@@ -84,9 +84,6 @@ const docTemplate = `{
         "/{path}/disable": {
             "patch": {
                 "description": "Disables the link with the given path and secret. Idempotent.",
-                "consumes": [
-                    "application/json"
-                ],
                 "produces": [
                     "application/json"
                 ],
@@ -103,13 +100,11 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "Secret",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/AdminRequest"
-                        }
+                        "type": "string",
+                        "description": "Bearer token containing admin secret",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -119,11 +114,11 @@ const docTemplate = `{
                             "$ref": "#/definitions/LinkResponse"
                         }
                     },
-                    "400": {
-                        "description": "Invalid request."
+                    "401": {
+                        "description": "Invalid admin secret."
                     },
                     "404": {
-                        "description": "Link not found or wrong secret."
+                        "description": "Link not found."
                     }
                 }
             }
@@ -150,12 +145,19 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "Secret and new target URL",
+                        "type": "string",
+                        "description": "Bearer token containing admin secret",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Target URL",
                         "name": "body",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/EditLinkRequest"
+                            "$ref": "#/definitions/ShortenLinkRequest"
                         }
                     }
                 ],
@@ -169,8 +171,11 @@ const docTemplate = `{
                     "400": {
                         "description": "Invalid request."
                     },
+                    "401": {
+                        "description": "Invalid admin secret."
+                    },
                     "404": {
-                        "description": "Link not found or wrong secret."
+                        "description": "Link not found."
                     }
                 }
             }
@@ -178,9 +183,6 @@ const docTemplate = `{
         "/{path}/enable": {
             "patch": {
                 "description": "Enables the link with the given path and secret. Idempotent.",
-                "consumes": [
-                    "application/json"
-                ],
                 "produces": [
                     "application/json"
                 ],
@@ -197,13 +199,11 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "Secret",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/AdminRequest"
-                        }
+                        "type": "string",
+                        "description": "Bearer token containing admin secret",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -213,52 +213,17 @@ const docTemplate = `{
                             "$ref": "#/definitions/LinkResponse"
                         }
                     },
-                    "400": {
-                        "description": "Invalid request."
+                    "401": {
+                        "description": "Invalid admin secret."
                     },
                     "404": {
-                        "description": "Link not found or wrong secret."
+                        "description": "Link not found."
                     }
                 }
             }
         }
     },
     "definitions": {
-        "AdminRequest": {
-            "type": "object",
-            "required": [
-                "secret"
-            ],
-            "properties": {
-                "secret": {
-                    "description": "The secret key for managing the link.",
-                    "type": "string",
-                    "format": "uuid",
-                    "example": "bcc9a044-918a-4ffa-ae4b-75274ca23668"
-                }
-            }
-        },
-        "EditLinkRequest": {
-            "type": "object",
-            "required": [
-                "secret",
-                "url"
-            ],
-            "properties": {
-                "secret": {
-                    "description": "The secret key for managing the link.",
-                    "type": "string",
-                    "format": "uuid",
-                    "example": "bcc9a044-918a-4ffa-ae4b-75274ca23668"
-                },
-                "url": {
-                    "description": "The target URL to shorten.",
-                    "type": "string",
-                    "format": "url",
-                    "example": "https://www.google.com"
-                }
-            }
-        },
         "LinkResponse": {
             "type": "object",
             "required": [

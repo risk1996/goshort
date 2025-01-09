@@ -19,8 +19,8 @@ import (
 // @Contact.Name				William Darian
 // @Contact.Email				williamdariansutedjo@gmail.com
 // @BasePath					/
-// @ExternalDocs.description	GitHub
-// @ExternalDocs.url			https://github.com/risk1996/goshort
+// @ExternalDocs.Description	GitHub
+// @ExternalDocs.URL			https://github.com/risk1996/goshort
 func main() {
 	port := flag.Int("port", 8080, "Server port")
 	flag.Parse()
